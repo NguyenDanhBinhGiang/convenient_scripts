@@ -1,0 +1,7 @@
+if [[ $1 == "-a" ]]
+then
+	docker stop $(docker ps -a -q)
+fi
+docker system prune -f $1
+docker volume prune -f 
+docker network prune -f
