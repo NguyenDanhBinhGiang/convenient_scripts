@@ -69,8 +69,8 @@ def main():
     try:
         res = res.json()
         if 'error' in res:
-            os.system(r'"error when trying to check attendances"')
-            return
+            raise Exception(r'"error when trying to check attendances"')
+
         if datetime.datetime.fromisoformat(res['result']['records'][0]['check_in']).date() == datetime.date.today():
             index = 1
         else:
