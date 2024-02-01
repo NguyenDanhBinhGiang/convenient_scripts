@@ -87,8 +87,8 @@ def main():
     try:
         res = res.json()
         if 'error' in res:
-            os.system(r'"error when trying to check timesheet"')
-            return
+            raise Exception(r'"error when trying to check timesheet"')
+
         b = [x for x in res['result']['records']
              if datetime.datetime.strptime(x['date_start'], '%Y-%m-%d %H:%M:%S').date() == datetime.date.today()]
         c = [x for x in b if not x['date_end']]
