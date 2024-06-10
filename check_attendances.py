@@ -75,7 +75,7 @@ def main():
             index = 1
         else:
             return
-        if not res['result']['records'][index]['check_out']:
+        if not res['result']['records'][index]['check_out'] or res['result']['records'][index]['worked_hours'] < 5:
             os.system(r'/usr/bin/notify-send -u critical "Attendances" '
                       r'"https://odoo.hungnamecommerce.com/web#action=1755&model=hr.attendance&view_type=list&cids=1&menu_id=1472"')
             print(f"Send notify at {datetime.datetime.now()}")
