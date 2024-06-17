@@ -129,5 +129,10 @@ _know_python_venv()
 
 complete -F _know_python_venv venv_activate
 
+source ~/.bash_completion.d/complete_alias
 alias bro=git
-alias pls=sudo
+complete -F _complete_alias bro
+alias pls='sudo'
+complete -F _complete_alias pls
+alias god='sudo -i'
+complete -F _complete_alias god
