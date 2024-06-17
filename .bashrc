@@ -116,6 +116,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export PATH="~/.local/bin:$PATH"
+
 eval "$(thefuck --alias)"
 alias to='. ~/script/to.sh'
 alias back='. ~/script/to.sh ..'
