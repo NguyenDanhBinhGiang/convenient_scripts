@@ -1,6 +1,6 @@
 if [ $# -gt 0 ]
 then
-	cd "$1" && ls --group-directories-first -a;
+	cd "$1" && ls --group-directories-first -A;
 else
-	cd ~ && ls --group-directories-first -a
+	cd ~ && ls --group-directories-first -A
 fi
