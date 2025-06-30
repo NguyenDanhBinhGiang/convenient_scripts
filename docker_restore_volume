@@ -1,0 +1,7 @@
+if [ $# -gt 0 ]
+then
+        docker run -it --rm --name=restore_$1 --mount source=$1,destination=/mnt/$1 -v $(pwd):/backup ubuntu bash -c "rm -rf /mnt/$1/* && tar xf /backup/$1.tar.gz"
+else
+        echo "You must provide a volume name"
+fi
+
