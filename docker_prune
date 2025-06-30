@@ -1,5 +1,10 @@
+#!/bin/bash
+
 if [[ $1 == "-a" ]]
 then
+    printf "DANGER: This will delete EVERYTHING in your Docker environment.\nYou have 5 seconds to cancel this operation.\n"
+    sleep 5
+    printf "Stopping all containers...\n"
 	docker stop $(docker ps -a -q)
 fi
 docker system prune -f $1

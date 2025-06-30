@@ -1,6 +1,21 @@
+#!/bin/bash
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: docker_backup_volume VOLUME_NAME"
+    echo
+    echo "Creates a backup of the specified Docker volume as a tar.gz archive in the current directory."
+    exit 0
+fi
+
+if [[ "$1" == "--version" ]]; then
+    echo "docker_backup_volume 1.0"
+    exit 0
+fi
+
 if [ $# -gt 0 ]
 then
-	docker run --rm --name=backup_$1_container --mount source=$1,destination=/mnt/$1 -v $(pwd):/backup ubuntu tar cf /backup/$1.tar.gz /mnt/$1
+	docker run --rm --name=backup_$1_container --mount source=$1,destination=/mnt/$1 -v $(pwd):/backup ubuntu tar cf /backup/$1.tar.gz /mnt/$1 && \
+	printf "Backup of volume $1 completed successfully. \nThe backup file is located at $(pwd)/$1.tar.gz\n"
 else
 	echo "You must provide a volume name"
 fi

@@ -1,5 +1,51 @@
+#!/bin/bash
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: docker_restore_volume VOLUME_NAME [-y]"
+    echo
+    echo "Restores the specified Docker volume from a tar.gz backup."
+    echo "WARNING: Existing data in the volume will be overwritten."
+    echo
+    echo "Options:"
+    echo "  -y    Skip confirmation prompt."
+    exit 0
+fi
+
+if [[ "$1" == "--version" ]]; then
+    echo "docker_restore_volume 1.0"
+    exit 0
+fi
+
 if [ $# -gt 0 ]
 then
+        printf "Warning: this tool must be run in the same folder as the docker_backup_volume output folder. \nTHE VOLUME'S DATA WILL BE OVERWRITTEN.\n"
+        # check for parameter -y
+        if [[ $2 == "-y" ]]
+        then
+                choice="y"
+        else
+                # get user confirmation
+                read -p "Do you want to continue? (y/n): " choice
+                # check if user input is valid
+                while [[ ! "$choice" =~ ^[YyNn]$ ]]; do
+                        echo "Invalid input. Please enter 'y' or 'n'."
+                        read -p "Do you want to continue? (y/n): " choice
+                done
+        fi
+        # return if user input is No
+        if [[ "$choice" =~ ^[Nn]$ ]]; then
+                echo "Operation cancelled."
+                exit 0
+        fi
+        # run the docker command to restore the volume
+        # if volume not exist, create it
+        docker volume create $1;
+        echo "Restoring volume $1 from $1.tar.gz"
+        # check if the tar.gz file exists
+        if [ ! -f "$1.tar.gz" ]; then
+                echo "Error: $1.tar.gz not found in the current directory. Make sure you have run docker_backup_volume first."
+                exit 1
+        fi
         docker run -it --rm --name=restore_$1 --mount source=$1,destination=/mnt/$1 -v $(pwd):/backup ubuntu bash -c "rm -rf /mnt/$1/* && tar xf /backup/$1.tar.gz"
 else
         echo "You must provide a volume name"

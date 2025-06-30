@@ -129,7 +129,15 @@ _know_python_venv()
     COMPREPLY=( $(compgen -W "$(ls ~/python_venv/)" -- $cur) )
 }
 
+_existing_docker_volume()
+{
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    COMPREPLY=( $(compgen -W "$(docker volume ls -q)" -- "$cur") )
+}
+
 complete -F _know_python_venv venv_activate
+complete -F _existing_docker_volume docker_backup_volume
+complete -F _existing_docker_volume docker_restore_volume
 
 source ~/.bash_completion.d/complete_alias
 alias bro=git
