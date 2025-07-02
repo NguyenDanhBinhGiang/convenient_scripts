@@ -1,0 +1,18 @@
+#!/bin/bash
+
+@if ! command -v help2man &> /dev/null; then \
+	echo "WARNING: help2man is not installed. Man pages will not be generated."; \
+	echo "To install help2man, run: sudo apt-get install help2man"; \
+	while true; do \
+		echo -n "Do you want to install help2man? (y/n): "; \
+		read choice; \
+		case "$$choice" in \
+			[YyNn]*) break ;; \
+			*) echo "Invalid input. Please enter 'y' or 'n'." ;; \
+		esac; \
+	done; \
+	if [ "$$choice" = "y" ] || [ "$$choice" = "Y" ]; then \
+		echo "Installing help2man..."; \
+		sudo apt-get install help2man; \
+	fi \
+fi

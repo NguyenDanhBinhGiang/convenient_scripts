@@ -146,3 +146,5 @@ alias pls='sudo'
 complete -F _complete_alias pls
 alias god='sudo -i'
 complete -F _complete_alias god
+alias apt-upgrade='sudo apt update && sudo apt upgrade'
+complete -F _complete_alias apt-upgrade

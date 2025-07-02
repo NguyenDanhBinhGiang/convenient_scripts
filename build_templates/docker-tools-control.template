@@ -1,0 +1,8 @@
+Package: docker-tools
+Version: 1.0
+Section: base
+Priority: optional
+Architecture: all
+Depends: docker-ce
+Maintainer: White Weasel <contact@hiragawa.com>
+Description: Tools for managing Docker volumes.

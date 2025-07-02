@@ -12,7 +12,7 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
 fi
 
 if [[ "$1" == "--version" ]]; then
-    echo "docker_restore_volume 1.0"
+    echo "docker_restore_volume 0.1"
     exit 0
 fi
 
