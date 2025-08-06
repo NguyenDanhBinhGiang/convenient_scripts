@@ -148,3 +148,4 @@ alias god='sudo -i'
 complete -F _complete_alias god
 alias apt-upgrade='sudo apt update && sudo apt upgrade'
 complete -F _complete_alias apt-upgrade
+alias docker-compose-rebuild='docker compose down && docker compose build && docker compose up -d && docker compose logs -fn 1000'
