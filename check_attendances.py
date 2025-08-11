@@ -14,22 +14,33 @@ def get_cookie(host: str = 'localhost'):
             d[col[0]] = row[idx]
         return d
 
-    ff_cookies = os.path.expanduser(os.path.join("~", r".tmp/cookies.sqlite"))
-    if not os.path.exists(os.path.expanduser(os.path.join("~", '.tmp'))):
-        os.system(f"mkdir -p ~/.tmp")
-    shutil.copyfile(os.path.expanduser(os.path.join("~", r"snap/firefox/common/.mozilla/firefox/m2hrr1pn.default/cookies.sqlite")), ff_cookies)
+    ff_cookies = r"/home/giang/.tmp/cookies.sqlite"
+    shutil.copyfile(r"/home/giang/.mozilla/firefox/ykxnh7xb.default-release/cookies.sqlite", ff_cookies)
     con = sqlite3.connect(ff_cookies)
     con.row_factory = dict_factory
     cur = con.cursor()
-    cur.execute(f"SELECT * FROM moz_cookies WHERE host like '{host}'")
-    a = cur.fetchall()
+    param = {
+        'host': host,
+    }
+    cur.execute(f"""
+        SELECT name, value FROM moz_cookies
+        WHERE host like :host
+--           AND name = 'session_id'
+        ORDER BY lastAccessed DESC
+--         LIMIT 1;
+    """, param)
+    result = cur.fetchall()
     cur.close()
     con.close()
 
-    cookies = [x for x in a if x['lastAccessed'] == max([i['lastAccessed'] for i in a]) and x['name'] == 'session_id']
-    if len(cookies) > 0:
-        return {cookies[0]['name']: cookies[0]['value']}
-    return False
+    cookies = {
+        res['name']: res['value']
+        for res in result
+    }
+    if cookies:
+        return cookies
+    return None
+
 
 
 def main():
