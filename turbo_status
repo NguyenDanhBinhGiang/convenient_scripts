@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ ! -f /sys/devices/system/cpu/intel_pstate/no_turbo ]]
+then
+  echo "Turbo config file does not exist. This is likely because you are not using an Intel CPU."
+  exit 1
+fi
+
+if [[ $(cat  /sys/devices/system/cpu/intel_pstate/no_turbo) == "0" ]]
+then
+	echo "Turbo enabled"
+else
+	echo "Turbo disabled"
+fi

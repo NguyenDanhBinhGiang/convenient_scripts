@@ -1,5 +1,16 @@
 #!/bin/bash
 
-touch $1 && \
-chmod +x $1 &&\
+# show a warning if the file already exists
+if [[ -f $1 ]]; then
+    printf "Warning: File $1 already exists and will be overwritten.\n"
+    read -p "Do you want to continue? (y/n): " choice
+    # if choice is not 'y' or 'Y', exit the script
+    if [[ ! $choice =~ ^[Yy]$ ]]; then
+        echo "Operation cancelled."
+        exit 1
+    fi
+fi
+# create or overwrite the file with a shebang and make it executable
+printf "#!/bin/bash\n" | tee $1 && \
+chmod +x $1 && \
 ls --group-directories-first -A --color=auto;

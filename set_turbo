@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [[ $# -gt 0 ]]
+then
+  # assert that the first argument is either 1 or 0
+  if [[ $1 != "1" && $1 != "0" ]]
+  then
+    echo "Parameter must be 1 or 0"
+    exit 1
+  fi
+  # check if the no_turbo file exists
+  if [[ ! -f /sys/devices/system/cpu/intel_pstate/no_turbo ]]
+  then
+    echo "Turbo config file does not exist. This is likely because you are not using an Intel CPU."
+    exit 1
+  fi
+  # write the value to the no_turbo file
+	sudo echo $1 > /sys/devices/system/cpu/intel_pstate/no_turbo
+else
+	echo "Missing turbo status parameter (1 or 0)"
+  exit 1
+fi
