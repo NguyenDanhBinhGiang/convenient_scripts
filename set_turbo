@@ -15,7 +15,15 @@ then
     exit 1
   fi
   # write the value to the no_turbo file
-	sudo echo $1 > /sys/devices/system/cpu/intel_pstate/no_turbo
+	if [[ $1 == "1" ]]
+  then
+    echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo && \
+    echo "Turbo mode enabled"
+  elif [[ $1 == "0" ]]
+  then
+    echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo && \
+    echo "Turbo mode disabled"
+  fi
 else
 	echo "Missing turbo status parameter (1 or 0)"
   exit 1
