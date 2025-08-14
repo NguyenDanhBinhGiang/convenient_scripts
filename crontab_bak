@@ -21,6 +21,6 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 #
 # m h  dom mon dow   command
-*/5 * * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) <path_to_script>
-* */12 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) <path_to_script>
-* */14 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) <path_to_script>
+# */5 * * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) <path_to_script>
+# * */12 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) <path_to_script>
+# * */14 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) <path_to_script>

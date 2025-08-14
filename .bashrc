@@ -118,7 +118,7 @@ fi
 
 export PATH="~/.local/bin:$PATH"
 
-eval "$(thefuck --alias)"
+# eval "$(thefuck --alias)"
 alias to='. ~/script/to.sh'
 alias back='. ~/script/to.sh ..'
 alias venv_activate='. ~/script/venv_activate.sh'
