@@ -20,38 +20,9 @@ convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volu
 	mkdir -p build/convenient-bash-tools-deb/usr/share/man/man1 && \
 	mkdir -p build/convenient-bash-tools-deb/DEBIAN && \
 	echo "Checking docker installation..." && \
-	if ! command -v docker > /dev/null 2>&1; then \
-		echo "WARNING: docker is not installed."&& \
-		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
-  			echo "DEBIAN_NONINTERACTIVE is set. Installing docker automatically." && \
-  			choice="y" ; \
-		else \
-			read -p "Do you want to install docker? (y/n): " choice && \
-			while [[ ! "$$choice" =~ ^[YyNn]$$ ]]; do \
-				echo "Invalid input. Please enter 'y' or 'n'." && \
-				read -p "Do you want to install docker? (y/n): " choice ; \
-			done; \
-		fi; \
-		if [[ "$$choice" =~ ^[Yy]$$ ]]; then \
-			echo "Installing docker."&& \
-			sudo apt-get update && \
-			sudo apt-get install ca-certificates curl && \
-			sudo install -m 0755 -d /etc/apt/keyrings && \
-			sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
-			sudo chmod a+r /etc/apt/keyrings/docker.asc && \
-			echo \
-			  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-			  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-			  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-			sudo apt-get update && \
-			sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
-			sudo usermod -aG docker $USER && \
-			newgrp docker ; \
-		fi; \
-	fi; \
 	echo "Downloading complete_alias" && \
 	if ! command -v wget > /dev/null 2>&1; then \
-		echo "WARNING: wget is REQUIRED to install complete_alias."; \
+		echo "\033[0;31mWARNING:\033[0m wget is REQUIRED to install complete_alias."; \
 		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
   			echo "DEBIAN_NONINTERACTIVE is set. Installing wget automatically." && \
   			choice="y"; \
@@ -85,7 +56,12 @@ convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volu
 	dpkg-deb --build build/convenient-bash-tools-deb && \
 	mkdir -p dist && \
 	mv build/convenient-bash-tools-deb.deb dist/convenient-bash-tools.deb && \
-	echo "Bash tools Debian package built successfully: dist/convenient-bash-tools-deb.deb"
+	echo "Bash tools Debian package built successfully: dist/convenient-bash-tools-deb.deb" && \
+	if ! command -v docker > /dev/null 2>&1; then \
+		printf "\n\n\033[0;31mWARNING:\033[0m docker is not installed.\n" && \
+		echo "Follow this guide to install docker: https://docs.docker.com/engine/install"; \
+	fi;
+
 
 cloudflare-ddns: cloudflared_dynamic_dns_ipv6.py
 	@sudo cp cloudflared_dynamic_dns_ipv6.py /usr/local/bin/cloudflared_dynamic_dns_ipv6 && \
@@ -102,7 +78,7 @@ other-tools:
 .PHONY: check-help2man
 check-help2man:
 	@if ! command -v help2man > /dev/null 2>&1; then \
-		echo "WARNING: help2man is not installed. Man pages will not be generated."; \
+		echo "\033[0;31mWARNING:\033[0m help2man is not installed. Man pages will not be generated."; \
 		echo "To install help2man, run: sudo apt-get install help2man"; \
 		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
   			echo "DEBIAN_NONINTERACTIVE is set. Installing help2man automatically."; \
