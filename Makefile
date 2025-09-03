@@ -46,7 +46,7 @@ convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volu
 			sudo apt-get update && \
 			sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
 			sudo usermod -aG docker $USER && \
-			newgrp docker;
+			newgrp docker; \
 		fi; \
 	fi && \
 	echo "Downloading complete_alias" && \
