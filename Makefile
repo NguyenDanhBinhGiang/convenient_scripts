@@ -13,12 +13,42 @@ convenient-bash-tools: check-help2man convenient-bash-tools.deb
 	@echo "Docker tools build process completed."
 
 convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volume
-	@echo "Building Docker tools Debian package..." && \
+	@echo "Building bash tools Debian package..." && \
 	mkdir -p build/convenient-bash-tools-deb/usr/local/bin && \
 	mkdir -p build/convenient-bash-tools-deb/usr/share/convenient-bash-tools && \
 	mkdir -p build/convenient-bash-tools-deb/etc/bash_completion.d && \
 	mkdir -p build/convenient-bash-tools-deb/usr/share/man/man1 && \
 	mkdir -p build/convenient-bash-tools-deb/DEBIAN && \
+	echo "Checking docker installation..." && \
+	if ! command -v docker > /dev/null 2>&1; then \
+		echo "WARNING: docker is not installed."; \
+		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
+  			echo "DEBIAN_NONINTERACTIVE is set. Installing docker automatically."; \
+  			choice="y"; \
+		else \
+			read -p "Do you want to install docker? (y/n): " choice ; \
+			while [[ ! "$$choice" =~ ^[YyNn]$$ ]]; do \
+				echo "Invalid input. Please enter 'y' or 'n'."; \
+				read -p "Do you want to install docker? (y/n): " choice; \
+			done; \
+		fi; \
+		if [[ "$$choice" =~ ^[Yy]$$ ]]; then \
+			echo "Installing docker."; \
+			sudo apt-get update && \
+			sudo apt-get install ca-certificates curl && \
+			sudo install -m 0755 -d /etc/apt/keyrings && \
+			sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+			sudo chmod a+r /etc/apt/keyrings/docker.asc && \
+			echo \
+			  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+			  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+			  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+			sudo apt-get update && \
+			sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
+			sudo usermod -aG docker $USER && \
+			newgrp docker;
+		fi; \
+	fi && \
 	echo "Downloading complete_alias" && \
 	wget -q --show-progress -O build/convenient-bash-tools-deb/usr/share/convenient-bash-tools/complete_alias https://raw.githubusercontent.com/cykerway/complete-alias/refs/heads/master/complete_alias; \
 	echo "Copying files..." && \
