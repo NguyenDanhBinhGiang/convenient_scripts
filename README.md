@@ -1,58 +1,48 @@
-# 🚀 Handy Scripts Collection
+# Handy Scripts Collection
 
 A collection of useful scripts for various tasks.
 
-## 🛠️ Building Tools
+## 📋Included Tools
 
-This project uses a `Makefile` to build and package specific tools.
+* `docker_backup_volume`: Backs up a Docker volume.
+* `docker_prune`: Cleans up Docker resources.
+* `docker_restore_volume`: Restores a Docker volume.
+* `mkbash`: Quickly create a bash script with a shebang and executable permissions.
+* `set_turbo`: Enables or disables turbo mode on Intel CPUs.
+* `turbo_status`: Checks the current turbo mode status on Intel CPUs.
+* `to`: Navigate to a directory and list its contents.
+* `venv_activate`: Quickly activate a Python virtual environment located in `$HOME/python_venv/`.
 
-To build the `convenient-bash-tools` Debian package:
+## 🛠️ How to build.
 
-```bash
-make build
-```
+### 📦 Bash convenience tools
 
-#### Pre-requisites
-
-`help2man` is used to generate man pages. If it's not installed, the Debian package will still build, just without man pages.
-
-To install `help2man` on Debian/Ubuntu:
-
-```bash
-sudo apt-get install help2man
-```
-
-#### Included Tools
-*   `docker_backup_volume`: Backs up a Docker volume. 💾
-*   `docker_prune`: Cleans up Docker resources. ✨
-*   `docker_restore_volume`: Restores a Docker volume. 🔄
-*   `mkbash`: Quickly create a bash script with a shebang and executable permissions. 📝
-*   `set_turbo`: Enables or disables turbo mode on Intel CPUs. ⚡
-*   `turbo_status`: Checks the current turbo mode status on Intel CPUs. 📊
-*   `to`: Navigate to a directory and list its contents. 📂
-*   `venv_activate`: Quickly activate a Python virtual environment located in $HOME/python_venv/
+1. Build the `convenient-bash-tools` Debian package:
+    ```bash
+    make build
+    ```
+2. The debian package will be created in the `dist/` directory. Install using `dpkg` or `apt`:
+    ```bash
+    sudo dpkg -i dist/your-package-name.deb
+    ```
+3. Cleaning Up
+   To remove all build artifacts:
+    ```bash
+    make clean
+    ```
 
 ### ☁️ Cloudflare DDNS Tools
 
-First, edit the file [cloudflared_dynamic_dns_ipv6.py](cloudflared_dynamic_dns_ipv6.py), fill in your api key and domain names.
+First, edit the file [cloudflared_dynamic_dns_ipv6.py](cloudflared_dynamic_dns_ipv6.py), fill in your api key and domain
+names.
 
-Once done, run 
+Once done, run
 
 ```bash
 make cloudflare-ddns
 ```
 
-This copies `cloudflare_ipv6_ddns` and `cloudflared_dynamic_dns_ipv6.py` to `dist/bin/`.
-
-## 📦 Installation
-
-Install using the generated `.deb` package or download from releases:
-
-```bash
-sudo dpkg -i dist/your-package-name.deb
-```
-
-## 🧹 Cleaning Up
+### 🧹 Cleaning Up
 
 To remove all build artifacts:
 
@@ -60,5 +50,17 @@ To remove all build artifacts:
 make clean
 ```
 
+### 🗑️ Uninstall
+
+To uninstall both bash tools and cloudflare ddns tool, run:
+
+```bash
+sudo make uninstall
+```
+
 ## Contributing(??)
 
+You have.
+
+## License
+[GLPL](LICENSE)(Gas Lighting Public License)
