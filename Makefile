@@ -1,31 +1,44 @@
 SHELL := /bin/bash
 
-.PHONY: all clean docker-tools cloudflare-ddns other-tools
+.PHONY: all clean convenient-bash-tools cloudflare-ddns other-tools build
 
-all: docker-tools cloudflare-ddns other-tools
+all: convenient-bash-tools cloudflare-ddns other-tools build
 
-# Define docker-tools target to build the deb package
-docker-tools: check-help2man docker-tools.deb
+# Define build target
+build: convenient-bash-tools
+	@echo "Build processes completed."
+
+# Define convenient-bash-tools target to build the deb package
+convenient-bash-tools: check-help2man convenient-bash-tools.deb
 	@echo "Docker tools build process completed."
 
-docker-tools.deb: docker_backup_volume docker_prune docker_restore_volume
+convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volume
 	@echo "Building Docker tools Debian package..." && \
-	mkdir -p build/docker-tools-deb/usr/local/bin && \
-	mkdir -p build/docker-tools-deb/DEBIAN && \
+	mkdir -p build/convenient-bash-tools-deb/usr/local/bin && \
+	mkdir -p build/convenient-bash-tools-deb/usr/share/convenient-bash-tools && \
+	mkdir -p build/convenient-bash-tools-deb/etc/bash_completion.d && \
+	mkdir -p build/convenient-bash-tools-deb/usr/share/man/man1 && \
+	mkdir -p build/convenient-bash-tools-deb/DEBIAN && \
+	echo "Downloading complete_alias" && \
+	wget -q --show-progress -O build/convenient-bash-tools-deb/usr/share/convenient-bash-tools/complete_alias https://raw.githubusercontent.com/cykerway/complete-alias/refs/heads/master/complete_alias; \
 	echo "Copying files..." && \
-	cp build_templates/docker-tools-control.template build/docker-tools-deb/DEBIAN/control && \
-	cp docker_backup_volume docker_prune docker_restore_volume build/docker-tools-deb/usr/local/bin/ && \
-	chmod 755 build/docker-tools-deb/usr/local/bin/* && \
-	mkdir -p build/docker-tools-deb/usr/share/man/man1 && \
+	cp build_templates/DEBIAN/control build/convenient-bash-tools-deb/DEBIAN/control && \
+	cp docker_prune docker_backup_volume docker_restore_volume mkbash set_turbo turbo_status build/convenient-bash-tools-deb/usr/local/bin/ && \
+	cp to.sh venv_activate.sh build/convenient-bash-tools-deb/usr/share/convenient-bash-tools  && \
+	cp build_templates/etc/bash_completion.d/bash_tools build/convenient-bash-tools-deb/etc/bash_completion.d && \
+	chmod 755 build/convenient-bash-tools-deb/usr/local/bin/* && \
 	echo "Generating man pages..." && \
-	help2man -N --no-info --output=build/docker-tools-deb/usr/share/man/man1/docker_backup_volume.1 build/docker-tools-deb/usr/local/bin/docker_backup_volume || true && \
-	help2man -N --no-info --output=build/docker-tools-deb/usr/share/man/man1/docker_prune.1 build/docker-tools-deb/usr/local/bin/docker_prune || true && \
-	help2man -N --no-info --output=build/docker-tools-deb/usr/share/man/man1/docker_restore_volume.1 build/docker-tools-deb/usr/local/bin/docker_restore_volume || true && \
+	help2man -N --no-info --output=build/convenient-bash-tools-deb/usr/share/man/man1/docker_backup_volume.1 build/convenient-bash-tools-deb/usr/local/bin/docker_backup_volume || true && \
+	help2man -N --no-info --output=build/convenient-bash-tools-deb/usr/share/man/man1/docker_prune.1 build/convenient-bash-tools-deb/usr/local/bin/docker_prune || true && \
+	help2man -N --no-info --output=build/convenient-bash-tools-deb/usr/share/man/man1/docker_restore_volume.1 build/convenient-bash-tools-deb/usr/local/bin/docker_restore_volume || true && \
+	help2man -N --no-info --output=build/convenient-bash-tools-deb/usr/share/man/man1/set_turbo.1 build/convenient-bash-tools-deb/usr/local/bin/set_turbo || true && \
+	help2man -N --no-info --output=build/convenient-bash-tools-deb/usr/share/man/man1/turbo_status.1 build/convenient-bash-tools-deb/usr/local/bin/turbo_status || true && \
+	help2man -N --no-info --output=build/convenient-bash-tools-deb/usr/share/man/man1/mkbash.1 build/convenient-bash-tools-deb/usr/local/bin/mkbash || true && \
 	echo "Building deb package..." && \
-	dpkg-deb --build build/docker-tools-deb && \
+	dpkg-deb --build build/convenient-bash-tools-deb && \
 	mkdir -p dist && \
-	mv build/docker-tools-deb.deb dist/docker-tools.deb && \
-	echo "Docker tools Debian package built successfully: dist/docker-tools-deb.deb"
+	mv build/convenient-bash-tools-deb.deb dist/convenient-bash-tools.deb && \
+	echo "Docker tools Debian package built successfully: dist/convenient-bash-tools-deb.deb"
 
 cloudflare-ddns: cloudflared_dynamic_dns_ipv6.py
 	@sudo cp cloudflared_dynamic_dns_ipv6.py /usr/local/bin/cloudflared_dynamic_dns_ipv6 && \
@@ -41,14 +54,19 @@ other-tools:
 
 .PHONY: check-help2man
 check-help2man:
-	@if ! command -v help2man >/dev/null 2>&1; then \
+	@if ! command -v help2man > /dev/null 2>&1; then \
 		echo "WARNING: help2man is not installed. Man pages will not be generated."; \
 		echo "To install help2man, run: sudo apt-get install help2man"; \
-		read -p "Do you want to install help2man? (y/n): " choice ; \
-		while [[ ! "$$choice" =~ ^[YyNn]$$ ]]; do \
-			echo "Invalid input. Please enter 'y' or 'n'."; \
-			read -p "Do you want to install help2man? (y/n): " choice; \
-		done; \
+		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
+  			echo "DEBIAN_NONINTERACTIVE is set. Installing help2man automatically."; \
+  			choice="y"; \
+		else \
+			read -p "Do you want to install help2man? (y/n): " choice ; \
+			while [[ ! "$$choice" =~ ^[YyNn]$$ ]]; do \
+				echo "Invalid input. Please enter 'y' or 'n'."; \
+				read -p "Do you want to install help2man? (y/n): " choice; \
+			done; \
+		fi; \
 		if [[ "$$choice" =~ ^[Yy]$$ ]]; then \
 			echo "Installing help2man."; \
 			sudo apt-get update && sudo apt-get install -y help2man; \
@@ -58,12 +76,12 @@ check-help2man:
 clean:
 	@rm -rf build dist && echo "Done"
 
-clean-docker-tools:
-	@rm -rf build/docker-tools-deb && rm dist/docker-tools.deb && echo "Done"
+clean-convenient-bash-tools:
+	@rm -rf build/convenient-bash-tools-deb && rm dist/convenient-bash-tools.deb && echo "Done"
 
 uninstall:
 	@echo "Uninstalling Docker tools..." && \
-	sudo apt purge docker-tools -y;
+	sudo apt purge convenient-bash-tools -y;
 	@echo "Uninstalling Cloudflare DDNS" && \
 	sudo rm -f /usr/local/bin/cloudflared_dynamic_dns_ipv6 && \
 	echo "Cloudflare DDNS uninstalled successfully.";

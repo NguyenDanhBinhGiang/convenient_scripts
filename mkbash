@@ -1,5 +1,19 @@
 #!/bin/bash
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: mkbash FILE_NAME"
+    echo
+    echo "Quickly create a new executable bash script with a shebang."
+    echo "FILE_NAME can be a path."
+    exit 0
+fi
+
+if [[ "$1" == "--version" ]]; then
+    echo "mkbash 0.1"
+    exit 0
+fi
+
+
 # show a warning if the file already exists
 if [[ -f $1 ]]; then
     printf "Warning: File $1 already exists and will be overwritten.\n"

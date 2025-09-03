@@ -1,0 +1,40 @@
+# some more ls aliases
+alias ll='ls -alF --group-directories-first --color=auto'
+alias la='ls -A --group-directories-first --color=auto'
+alias l='ls -ACF --group-directories-first --color=auto'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# my alias
+alias to='. /usr/share/convenient-bash-tools/to.sh'
+alias back='. /usr/share/convenient-bash-tools/to.sh ..'
+alias venv_activate='. /usr/share/convenient-bash-tools/venv_activate.sh'
+
+_know_python_venv()
+{
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    COMPREPLY=( $(compgen -W "$(ls ~/python_venv/)" -- $cur) )
+}
+
+_existing_docker_volume()
+{
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    COMPREPLY=( $(compgen -W "$(docker volume ls -q)" -- "$cur") )
+}
+
+complete -F _know_python_venv venv_activate
+complete -F _existing_docker_volume docker_backup_volume
+complete -F _existing_docker_volume docker_restore_volume
+
+source /usr/share/convenient-bash-tools/complete_alias
+alias bro=git
+complete -F _complete_alias bro
+alias pls='sudo'
+complete -F _complete_alias pls
+alias god='sudo -i'
+complete -F _complete_alias god
+alias apt-upgrade='sudo apt update && sudo apt upgrade'
+complete -F _complete_alias apt-upgrade
+alias docker-compose-rebuild='docker compose down && docker compose build && docker compose up -d && docker compose logs -fn 1000'

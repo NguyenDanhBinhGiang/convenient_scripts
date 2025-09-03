@@ -1,5 +1,19 @@
 #!/bin/bash
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: set_turbo TURBO_STATUS"
+    echo
+    echo "Enable or disable Intel CPU turbo mode."
+    echo "TURBO_STATUS should be 1 to enable turbo mode or 0 to disable it."
+    exit 0
+fi
+
+if [[ "$1" == "--version" ]]; then
+    echo "set_turbo 0.1"
+    exit 0
+fi
+
+
 if [[ $# -gt 0 ]]
 then
   # assert that the first argument is either 1 or 0

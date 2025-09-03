@@ -1,5 +1,18 @@
 #!/bin/bash
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: turbo_status"
+    echo
+    echo "Show the current status of Intel CPU turbo mode."
+    exit 0
+fi
+
+if [[ "$1" == "--version" ]]; then
+    echo "turbo_status 0.1"
+    exit 0
+fi
+
+
 if [[ ! -f /sys/devices/system/cpu/intel_pstate/no_turbo ]]
 then
   echo "Turbo config file does not exist. This is likely because you are not using an Intel CPU."
