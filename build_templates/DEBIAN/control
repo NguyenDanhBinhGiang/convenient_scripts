@@ -3,6 +3,6 @@ Version: 1.0
 Section: base
 Priority: optional
 Architecture: all
-Depends: sudo, wget, bash-completion
+Depends: sudo, bash-completion
 Maintainer: White Weasel <contact@hiragawa.com>
 Description: Tools for managing Docker volumes.

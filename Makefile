@@ -21,19 +21,19 @@ convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volu
 	mkdir -p build/convenient-bash-tools-deb/DEBIAN && \
 	echo "Checking docker installation..." && \
 	if ! command -v docker > /dev/null 2>&1; then \
-		echo "WARNING: docker is not installed."; \
+		echo "WARNING: docker is not installed."&& \
 		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
-  			echo "DEBIAN_NONINTERACTIVE is set. Installing docker automatically."; \
-  			choice="y"; \
+  			echo "DEBIAN_NONINTERACTIVE is set. Installing docker automatically." && \
+  			choice="y" ; \
 		else \
-			read -p "Do you want to install docker? (y/n): " choice ; \
+			read -p "Do you want to install docker? (y/n): " choice && \
 			while [[ ! "$$choice" =~ ^[YyNn]$$ ]]; do \
-				echo "Invalid input. Please enter 'y' or 'n'."; \
-				read -p "Do you want to install docker? (y/n): " choice; \
+				echo "Invalid input. Please enter 'y' or 'n'." && \
+				read -p "Do you want to install docker? (y/n): " choice ; \
 			done; \
 		fi; \
 		if [[ "$$choice" =~ ^[Yy]$$ ]]; then \
-			echo "Installing docker."; \
+			echo "Installing docker."&& \
 			sudo apt-get update && \
 			sudo apt-get install ca-certificates curl && \
 			sudo install -m 0755 -d /etc/apt/keyrings && \
@@ -46,10 +46,27 @@ convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volu
 			sudo apt-get update && \
 			sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
 			sudo usermod -aG docker $USER && \
-			newgrp docker; \
+			newgrp docker ; \
 		fi; \
-	fi && \
+	fi; \
 	echo "Downloading complete_alias" && \
+	if ! command -v wget > /dev/null 2>&1; then \
+		echo "WARNING: wget is REQUIRED to install complete_alias."; \
+		if [[ -n "$$DEBIAN_NONINTERACTIVE" ]]; then \
+  			echo "DEBIAN_NONINTERACTIVE is set. Installing wget automatically." && \
+  			choice="y"; \
+		else \
+			read -p "Do you want to install wget? (y/n): " choice && \
+			while [[ ! "$$choice" =~ ^[YyNn]$$ ]]; do \
+				echo "Invalid input. Please enter 'y' or 'n'." && \
+				read -p "Do you want to install wget? (y/n): " choice ; \
+			done; \
+		fi; \
+		if [[ "$$choice" =~ ^[Yy]$$ ]]; then \
+			echo "Installing wget." && \
+			sudo apt-get update && sudo apt-get install -y wget ; \
+		fi; \
+	fi; \
 	wget -q --show-progress -O build/convenient-bash-tools-deb/usr/share/convenient-bash-tools/complete_alias https://raw.githubusercontent.com/cykerway/complete-alias/refs/heads/master/complete_alias; \
 	echo "Copying files..." && \
 	cp build_templates/DEBIAN/control build/convenient-bash-tools-deb/DEBIAN/control && \
@@ -68,7 +85,7 @@ convenient-bash-tools.deb: docker_backup_volume docker_prune docker_restore_volu
 	dpkg-deb --build build/convenient-bash-tools-deb && \
 	mkdir -p dist && \
 	mv build/convenient-bash-tools-deb.deb dist/convenient-bash-tools.deb && \
-	echo "Docker tools Debian package built successfully: dist/convenient-bash-tools-deb.deb"
+	echo "Bash tools Debian package built successfully: dist/convenient-bash-tools-deb.deb"
 
 cloudflare-ddns: cloudflared_dynamic_dns_ipv6.py
 	@sudo cp cloudflared_dynamic_dns_ipv6.py /usr/local/bin/cloudflared_dynamic_dns_ipv6 && \
