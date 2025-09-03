@@ -1,4 +1,4 @@
-Package: docker-tools
+Package: convenient-bash-tools
 Version: 1.0
 Section: base
 Priority: optional

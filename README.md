@@ -6,15 +6,13 @@ A collection of useful scripts for various tasks.
 
 This project uses a `Makefile` to build and package specific tools.
 
-### 🐳 Docker Tools
-
-To build the `docker-tools` Debian package:
+To build the `convenient-bash-tools` Debian package:
 
 ```bash
-make docker-tools
+make build
 ```
 
-#### Pre-requisites for Docker Tools
+#### Pre-requisites
 
 `help2man` is used to generate man pages. If it's not installed, the Debian package will still build, just without man pages.
 
@@ -24,15 +22,19 @@ To install `help2man` on Debian/Ubuntu:
 sudo apt-get install help2man
 ```
 
-#### Included Docker Tools
-
+#### Included Tools
 *   `docker_backup_volume`: Backs up a Docker volume. 💾
 *   `docker_prune`: Cleans up Docker resources. ✨
 *   `docker_restore_volume`: Restores a Docker volume. 🔄
+*   `mkbash`: Quickly create a bash script with a shebang and executable permissions. 📝
+*   `set_turbo`: Enables or disables turbo mode on Intel CPUs. ⚡
+*   `turbo_status`: Checks the current turbo mode status on Intel CPUs. 📊
+*   `to`: Navigate to a directory and list its contents. 📂
+*   `venv_activate`: Quickly activate a Python virtual environment located in $HOME/python_venv/
 
 ### ☁️ Cloudflare DDNS Tools
 
-First, edit the [cloudflared_dynamic_dns_ipv6.py](cloudflared_dynamic_dns_ipv6.py), fill in your api key and domain names.
+First, edit the file [cloudflared_dynamic_dns_ipv6.py](cloudflared_dynamic_dns_ipv6.py), fill in your api key and domain names.
 
 Once done, run 
 
